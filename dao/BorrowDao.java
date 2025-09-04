@@ -60,18 +60,19 @@ public class BorrowDao {
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
-                int borowId = resultSet.getInt(" borrow_id");
-                int bookId = resultSet.getInt(" book_id");
-                String bookTitle = resultSet.getString(" book_title ");
-                int authoId = resultSet.getInt(" author_id");
-                String authorName = resultSet.getString(" author_name");
-                String memberName = resultSet.getString(" member_name");
+                int borrowId = resultSet.getInt("borrow_id");
+                int bookId = resultSet.getInt("book_id");
+                String bookTitle = resultSet.getString("book_title");
+                int authorId = resultSet.getInt("author_id");
+                String authorName = resultSet.getString("author_name");
+                String memberName = resultSet.getString("member_name");
 
-                Author author = new Author(authoId, authorName);
+                Author author = new Author(authorId, authorName);
                 Book book = new Book(bookId, bookTitle, author);
-                Member member = new Member(memberId, "memberName");
-                Borrow borrow = new Borrow(member, book);
-                borrow.setId(borowId);
+                Member member = new Member(memberId, memberName);
+
+                Borrow borrow = new Borrow(borrowId, member, book,
+                        resultSet.getDate("borrow_date").toLocalDate());
 
                 borrows.add(borrow);
 
