@@ -57,25 +57,25 @@ public class BorrowDao {
         List<Borrow> borrows = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, memberId);
-            ResultSet resultSet = ps.executeQuery();
+            try (ResultSet resultSet = ps.executeQuery()) {
 
-            while (resultSet.next()) {
-                int borrowId = resultSet.getInt("borrow_id");
-                int bookId = resultSet.getInt("book_id");
-                String bookTitle = resultSet.getString("book_title");
-                int authorId = resultSet.getInt("author_id");
-                String authorName = resultSet.getString("author_name");
-                String memberName = resultSet.getString("member_name");
+                while (resultSet.next()) {
+                    int borrowId = resultSet.getInt("borrow_id");
+                    int bookId = resultSet.getInt("book_id");
+                    String bookTitle = resultSet.getString("book_title");
+                    int authorId = resultSet.getInt("author_id");
+                    String authorName = resultSet.getString("author_name");
+                    String memberName = resultSet.getString("member_name");
 
-                Author author = new Author(authorId, authorName);
-                Book book = new Book(bookId, bookTitle, author);
-                Member member = new Member(memberId, memberName);
+                    Author author = new Author(authorId, authorName);
+                    Book book = new Book(bookId, bookTitle, author);
+                    Member member = new Member(memberId, memberName);
 
-                Borrow borrow = new Borrow(borrowId, member, book,
-                        resultSet.getDate("borrow_date").toLocalDate());
+                    Borrow borrow = new Borrow(borrowId, member, book,
+                            resultSet.getDate("borrow_date").toLocalDate());
 
-                borrows.add(borrow);
-
+                    borrows.add(borrow);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
